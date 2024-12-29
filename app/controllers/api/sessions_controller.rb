@@ -1,7 +1,7 @@
 class Api::SessionsController < Api::BaseController
-  skip_before_action :verify_authenticity_token, only: [:create]
+  skip_before_action :verify_authenticity_token, only: [:sign_up]
 
-  def create
+  def sign_up
     input = Api::SignUpUsecase::Input.new(
       email: session_params[:email],
       password: session_params[:password],
