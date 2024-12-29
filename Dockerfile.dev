@@ -3,6 +3,11 @@ FROM ruby:3.2.3
 # コンテナの作業ディレクトリ
 WORKDIR /app
 
+RUN apt-get update && apt-get install -y locales
+RUN locale-gen ja_JP.UTF-8
+ENV LC_ALL=ja_JP.UTF-8
+ENV LANG=ja_JP.UTF-8
+
 # コンテナの作業ディレクトリにコピー
 COPY Gemfile Gemfile.lock /app/
 
