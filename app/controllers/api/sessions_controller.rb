@@ -1,5 +1,5 @@
 class Api::SessionsController < Api::BaseController
-  skip_before_action :verify_authenticity_token, only: [:sign_up]
+  skip_before_action :verify_authenticity_token, only: [:sign_up, :log_in]
 
   def sign_up
     input = Api::SignUpUsecase::Input.new(
@@ -14,6 +14,20 @@ class Api::SessionsController < Api::BaseController
     render json: { token: output.token }, status: :created
   rescue Api::SignUpUsecase::SignUpError => e
     render json: { message: e.message }, status: :unprocessable_entity
+  end
+
+  def log_in
+    usecase = Api::LogInUsecase.new(
+      input: Api::LogInUsecase::Input.new(
+        email: session_params[:email],
+        password: session_params[:password]
+      )
+    )
+
+    output = usecase.log_in
+    render json: { message: "ログイン成功しました。", token: output.token }, status: :ok
+  rescue Api::LogInUsecase::LogInError => e
+    render json: { message: "ログイン失敗しました。" }, status: :unprocessable_entity
   end
 
   private
