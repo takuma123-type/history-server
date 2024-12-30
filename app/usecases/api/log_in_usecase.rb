@@ -26,9 +26,9 @@ class Api::LogInUsecase < Api::Usecase
     user = find_user_by_email(@input.email)
     raise LogInError, "Invalid email or password" unless authenticate_user(user, @input.password)
 
-    token = generate_token(user)
+    token = JwtService.encode({ user_id: user.id, exp: 24.hours.from_now.to_i })
     Output.new(token: token)
-  rescue ActiveRecord::RecordNotFound => e
+  rescue ActiveRecord::RecordNotFound
     raise LogInError, "User not found"
   end
 
@@ -41,10 +41,7 @@ class Api::LogInUsecase < Api::Usecase
 
   def authenticate_user(user, password)
     BCrypt::Password.new(user.authentication.password_digest) == password
-  end
-
-  def generate_token(user)
-    secret_key = Rails.application.credentials.secret_key_base
-    JWT.encode({ user_id: user.id, exp: 24.hours.from_now.to_i }, secret_key)
+  rescue BCrypt::Errors::InvalidHash
+    false
   end
 end

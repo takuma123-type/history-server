@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_28_114659) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_30_062125) do
   create_table "authentications", id: { type: :string, limit: 36 }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "login_id", null: false
     t.string "password_digest", null: false
@@ -44,11 +44,13 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_28_114659) do
     t.string "others"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "user_id", limit: 36, null: false
     t.index ["core_stack_id"], name: "fk_rails_38013b1888"
     t.index ["general_id"], name: "fk_rails_6f404c5489"
     t.index ["infrastructure_id"], name: "fk_rails_4f0c5111ca"
     t.index ["position_id"], name: "fk_rails_2da0cb21ab"
     t.index ["scale_id"], name: "fk_rails_c1b0c98510"
+    t.index ["user_id"], name: "fk_rails_ddbf5f9cca"
   end
 
   create_table "infrastructures", id: { type: :string, limit: 36 }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -91,6 +93,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_28_114659) do
   add_foreign_key "histories", "infrastructures"
   add_foreign_key "histories", "positions"
   add_foreign_key "histories", "scales"
+  add_foreign_key "histories", "users"
   add_foreign_key "sessions", "authentications"
   add_foreign_key "users", "authentications"
 end

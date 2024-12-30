@@ -13,5 +13,7 @@ class User < ApplicationRecord
 
   def create_general
     General.create!(user: self)
+  rescue => e
+    Rails.logger.error("General creation failed for User ID #{self.id}: #{e.message}")
   end
 end

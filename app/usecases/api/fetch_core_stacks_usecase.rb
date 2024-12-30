@@ -1,8 +1,4 @@
 class Api::FetchCoreStacksUsecase < Api::Usecase
-  class Input < Api::Usecase::Input
-    # 必要に応じて入力パラメータを定義
-  end
-
   class Output < Api::Usecase::Output
     attr_accessor :corestacks
 

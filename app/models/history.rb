@@ -4,6 +4,7 @@ class History < ApplicationRecord
   belongs_to :scale
   belongs_to :core_stack
   belongs_to :infrastructure
+  belongs_to :user
 
   before_create :set_uuid
 
