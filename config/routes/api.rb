@@ -4,7 +4,6 @@ resources :sessions, only: [] do
     post :log_in
   end
 end
-
 resources :infrastructures, only: [:index]
-
 resources :scales, only: [:index]
+resources :positions, only: [:index]
