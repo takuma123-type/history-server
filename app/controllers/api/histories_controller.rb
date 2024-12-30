@@ -23,6 +23,27 @@ class Api::HistoriesController < Api::BaseController
     render json: { error: 'サーバーエラーが発生しました。' }, status: :internal_server_error
   end
 
+  def show
+    usecase = Api::GetHistoryUsecase.new(
+      input: Api::GetHistoryUsecase::Input.new(
+        user: current_user,
+        history_id: params[:id]
+      )
+    )
+
+    output = usecase.get
+
+    if output.success?
+      render json: output.history, status: :ok
+    else
+      render json: { errors: output.errors }, status: :not_found
+    end
+  rescue => e
+    Rails.logger.error("Error fetching history: #{e.message}")
+    Rails.logger.error(e.backtrace.join("\n"))
+    render json: { error: 'Internal server error' }, status: :internal_server_error
+  end
+
   private
 
   def authenticate_user!
