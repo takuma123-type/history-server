@@ -1,3 +1,5 @@
+require 'write_xlsx'
+
 class Api::HistoriesController < Api::BaseController
   skip_before_action :verify_authenticity_token
   before_action :authenticate_user!
@@ -63,6 +65,29 @@ class Api::HistoriesController < Api::BaseController
     Rails.logger.error(e.backtrace.join("\n"))
     render json: { error: 'Internal server error' }, status: :internal_server_error
   end
+
+  def export
+    usecase = Api::ExportHistoryByIdUsecase.new(
+      input: Api::ExportHistoryByIdUsecase::Input.new(
+        user: current_user,
+        history_id: params[:id]
+      )
+    )
+  
+    output = usecase.export
+  
+    if output.success?
+      send_file output.workbook.path,
+                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                filename: "history_#{params[:id]}.xlsx"
+    else
+      render json: { errors: output.errors }, status: :not_found
+    end
+  rescue => e
+    Rails.logger.error("Error exporting history by ID: #{e.message}")
+    Rails.logger.error(e.backtrace.join("\n"))
+    render json: { error: 'Internal server error' }, status: :internal_server_error
+  end  
 
   private
 
