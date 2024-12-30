@@ -7,3 +7,5 @@ end
 resources :infrastructures, only: [:index]
 resources :scales, only: [:index]
 resources :positions, only: [:index]
+resources :core_stacks, only: [:index]
+
