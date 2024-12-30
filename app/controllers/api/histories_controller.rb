@@ -2,6 +2,26 @@ class Api::HistoriesController < Api::BaseController
   skip_before_action :verify_authenticity_token
   before_action :authenticate_user!
 
+  def index
+    usecase = Api::FetchHistoriesUsecase.new(
+      input: Api::FetchHistoriesUsecase::Input.new(
+        user: current_user
+      )
+    )
+
+    output = usecase.fetch
+
+    if output.success?
+      render json: output.histories, status: :ok
+    else
+      render json: { errors: output.errors }, status: :not_found
+    end
+  rescue => e
+    Rails.logger.error("Error fetching histories: #{e.message}")
+    Rails.logger.error(e.backtrace.join("\n"))
+    render json: { error: 'Internal server error' }, status: :internal_server_error
+  end
+
   def create
     usecase = Api::CreateHistoryUsecase.new(
       input: Api::CreateHistoryUsecase::Input.new(
