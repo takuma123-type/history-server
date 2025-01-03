@@ -93,9 +93,21 @@ class Api::HistoriesController < Api::BaseController
 
   def authenticate_user!
     token = request.headers['Authorization']&.split(' ')&.last || cookies.signed[:jwt]
-    decoded = JwtService.decode(token)
-    @current_user = User.find(decoded[:user_id]) if decoded
-
+    
+    if token.blank?
+      Rails.logger.error("エラー: トークンが提供されていません")
+      render json: { error: '認証トークンが提供されていません' }, status: :unauthorized
+      return
+    end
+  
+    begin
+      decoded = JwtService.decode(token)
+      @current_user = User.find(decoded[:user_id]) if decoded
+    rescue JWT::DecodeError => e
+      Rails.logger.error("エラー: トークンのデコードに失敗しました - #{e.message}")
+      render json: { error: '無効な認証トークンです' }, status: :unauthorized
+    end
+  
     render json: { error: '認証に失敗しました' }, status: :unauthorized unless @current_user
   end
 

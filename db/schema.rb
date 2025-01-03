@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_30_062125) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_03_065444) do
   create_table "authentications", id: { type: :string, limit: 36 }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "login_id", null: false
     t.string "password_digest", null: false
@@ -37,7 +37,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_30_062125) do
     t.string "scale_id", limit: 36, null: false
     t.string "core_stack_id", limit: 36, null: false
     t.string "infrastructure_id", limit: 36, null: false
-    t.datetime "period"
+    t.string "period"
     t.string "company_name", null: false
     t.string "project_name"
     t.string "contents"

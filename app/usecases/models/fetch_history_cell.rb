@@ -1,6 +1,5 @@
 class Models::FetchHistoryCell
   include ActiveModel::Model
 
-  attr_accessor :id, :period, :company_name, :project_name, :contents, :others,
-                :position, :scale, :core_stack, :infrastructure
+  attr_accessor :id,  :company_name, :created_at, :updated_at
 end

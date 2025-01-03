@@ -33,6 +33,6 @@ class Api::SessionsController < Api::BaseController
   private
 
   def session_params
-    params.require(:session).permit(:email, :password, :name)
+    params.permit(:email, :password, :name)
   end
 end

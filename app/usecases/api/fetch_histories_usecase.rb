@@ -24,27 +24,9 @@ class Api::FetchHistoriesUsecase < Api::Usecase
     histories = History.where(user: input.user).order(created_at: :desc).map do |history|
       Models::FetchHistoryCell.new(
         id: history.id,
-        period: history.period,
         company_name: history.company_name,
-        project_name: history.project_name,
-        contents: history.contents,
-        others: history.others,
-        position: {
-          id: history.position.id,
-          name: history.position.name
-        },
-        scale: {
-          id: history.scale.id,
-          people: history.scale.people
-        },
-        core_stack: {
-          id: history.core_stack.id,
-          name: history.core_stack.name
-        },
-        infrastructure: {
-          id: history.infrastructure.id,
-          name: history.infrastructure.name
-        }
+        created_at: history.created_at,
+        updated_at: history.updated_at
       )
     end
 
