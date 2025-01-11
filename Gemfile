@@ -38,6 +38,7 @@ gem "solid_cable"
 
 gem 'jwt', '~> 2.0'
 
+
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
 
@@ -59,10 +60,17 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  gem 'factory_bot_rails'
+  
+  gem 'faker'
+
+  gem 'rspec-rails'
+
+  gem 'rails-controller-testing'
 end
 
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
 end
-

@@ -7,14 +7,14 @@ class Api::SessionsController < Api::BaseController
       password: session_params[:password],
       name: session_params[:name]
     )
-
+  
     usecase = Api::SignUpUsecase.new(input: input)
     output = usecase.sign_up
-
+  
     render json: { token: output.token }, status: :created
   rescue Api::SignUpUsecase::SignUpError => e
     render json: { message: e.message }, status: :unprocessable_entity
-  end
+  end  
 
   def log_in
     input = Api::LogInUsecase::Input.new(

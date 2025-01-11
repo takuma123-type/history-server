@@ -24,26 +24,30 @@ class Api::SignUpUsecase < Api::Usecase
   end
 
   def sign_up
+    raise SignUpError, "Name, email, and password are required" if @input.name.blank? || @input.email.blank? || @input.password.blank?
+  
     sign_up_cell = Models::SignUpCell.new(
       email: @input.email,
       password: @input.password,
       name: @input.name
     )
-
+  
     ActiveRecord::Base.transaction do
       authentication = create_authentication(sign_up_cell)
       user = create_user(authentication, sign_up_cell)
       token = generate_token(user)
-
+  
       return Output.new(token: token)
     end
   rescue ActiveRecord::RecordInvalid => e
     raise SignUpError, e.message
   end
-
+  
   private
 
   def create_authentication(cell)
+    raise SignUpError, { errors: ['email or password is nil'] } if cell.nil? || cell.email.nil? || cell.password.nil?
+  
     Authentication.create!(
       login_id: cell.email,
       password_digest: BCrypt::Password.create(cell.password)
