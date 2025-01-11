@@ -1,4 +1,4 @@
-name: ai-pr-reviewer
+name: Code Review
 
 permissions:
   contents: read
@@ -25,7 +25,7 @@ jobs:
     if: (github.event_name == 'issue_comment' && contains(github.event.comment.body, '[run review]') && github.event.issue.pull_request) || (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '[run review]')) || (github.event_name == 'pull_request' && !contains(github.event.pull_request.title, 'release') && !contains(github.event.pull_request.title, 'Release'))
     timeout-minutes: 15
     steps:
-      - uses: coderabbitai/openai-pr-reviewer@latest
+      - uses: anc95/ChatGPT-CodeReview@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -36,7 +36,7 @@ jobs:
           openai_light_model: gpt-4o # 必要に応じて変更可能
           openai_heavy_model: gpt-4o # 必要に応じて変更可能
           openai_timeout_ms: 900000 # 15分
-          language: ja-JP # 日本語設定
+          language: Japanese # 日本語設定
           path_filters: |
             !db/**
             !**/*.lock
