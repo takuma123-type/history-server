@@ -1,0 +1,47 @@
+name: PR-Agent Command Trigger
+
+on:
+  workflow_dispatch:
+  
+  issue_comment:
+    types: [created, edited]
+
+permissions:
+  pull-requests: write
+  issues: write
+
+jobs:
+  handle_commands_pr_agent_job:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'issue_comment' && github.event.sender.type != 'Bot'
+    steps:
+      - name: PR Agent action step
+        id: pragent
+        uses: Codium-ai/pr-agent@main
+      # 概要を記述する
+      - name: Handle '/describe' command
+        if: contains(github.event.comment.body, '/describe')
+        uses: Codium-ai/pr-agent@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+          GITHUB_ACTION_CONFIG.AUTO_DESCRIBE: true
+          PR_DESCRIPTION.EXTRA_INSTRUCTIONS: "answer in Japanese"
+      # レビューを行う
+      - name: Handle '/review' command
+        if: contains(github.event.comment.body, '/review')
+        uses: Codium-ai/pr-agent@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+          GITHUB_ACTION_CONFIG.AUTO_REVIEW: true
+          PR_REVIEWER.EXTRA_INSTRUCTIONS: "answer in Japanese"
+      # コードの改善を行う
+      - name: Handle '/improve' command
+        if: contains(github.event.comment.body, '/improve')
+        uses: Codium-ai/pr-agent@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+          GITHUB_ACTION_CONFIG.AUTO_IMPROVE: true
+          PR_CODE_SUGGESTIONS.EXTRA_INSTRUCTIONS: "answer in Japanese"
