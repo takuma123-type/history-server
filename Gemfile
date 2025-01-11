@@ -22,7 +22,7 @@ gem "bcrypt", "~> 3.1.7"
 
 gem 'rubyXL', '~> 3.1.0'
 
-gem 'axlsx', '~> 2.1.0.pre'
+gem 'axlsx', '~> 3.0.0.pre'
 
 gem 'write_xlsx'
 
